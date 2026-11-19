@@ -1,0 +1,28 @@
+name: Test
+
+# Unit tests for the apps' own code (tests/<app>/) and the repository scripts.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    name: pytest
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install test tools
+        run: python3 -m pip install --quiet -r tests/requirements.txt
+
+      - name: Run tests
+        run: python3 -m pytest -q tests

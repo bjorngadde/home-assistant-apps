@@ -2,8 +2,9 @@
 """Decide which apps to lint and build, for the Build workflow.
 
 An app is a top-level folder with a config.yaml. On a pull request or push,
-only apps whose folder changed are built; a change under .github/ builds all
-of them. A manual run builds the apps named in INPUT_APPS, or all of them.
+only apps whose folder changed are built (Markdown files don't count). On a
+pull request, a change under .github/ builds all of them. A manual run builds
+the apps named in INPUT_APPS, or all of them.
 
 Prints GitHub Actions outputs:
   apps=<JSON list of app folders>
@@ -48,9 +49,14 @@ def select_apps() -> list[str]:
             sys.exit(f"Unknown apps: {', '.join(unknown)}")
         return wanted or apps
     paths = changed_paths(os.environ.get("BASE", ""))
-    if paths is None or any(p.startswith(".github/") for p in paths):
+    if paths is None:
         return apps
-    return [a for a in apps if any(p.startswith(f"{a}/") for p in paths)]
+    # A workflow change is tested on every app in its pull request, but must
+    # not rebuild them on main, where their versions are already published.
+    if os.environ.get("EVENT") == "pull_request" and any(p.startswith(".github/") for p in paths):
+        return apps
+    # Documentation is read from the repository, not from the image.
+    return [a for a in apps if any(p.startswith(f"{a}/") and not p.endswith(".md") for p in paths)]
 
 
 def builds_for(app: str) -> list[dict]:
