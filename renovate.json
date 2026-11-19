@@ -1,0 +1,97 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "One pull request per app. Images stay pinned by digest; the Bump workflow raises the app version on each pull request.",
+  "extends": [
+    "config:recommended",
+    "docker:pinDigests",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "timezone": "Europe/Stockholm",
+  "gitIgnoredAuthors": [
+    "41898282+github-actions[bot]@users.noreply.github.com"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Versions in Dockerfile ARGs, marked with a '# renovate: datasource=… depName=…' comment",
+      "managerFilePatterns": [
+        "/(^|/)Dockerfile$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>[a-z-]+) depName=(?<depName>\\S+)\\s+ARG \\w+=(?<currentValue>\\S+)"
+      ],
+      "extractVersionTemplate": "^v?(?<version>.+)$"
+    },
+    {
+      "customType": "regex",
+      "description": "Git commits in Dockerfile ARGs, marked with a '# renovate: datasource=git-refs …' comment",
+      "managerFilePatterns": [
+        "/(^|/)Dockerfile$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=git-refs depName=(?<depName>\\S+) packageName=(?<packageName>\\S+) branch=(?<currentValue>\\S+)\\s+ARG \\w+=(?<currentDigest>[0-9a-f]{40})"
+      ],
+      "datasourceTemplate": "git-refs"
+    },
+    {
+      "customType": "regex",
+      "description": "Images run from workflow steps, marked with a '# renovate: image' comment",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/[^/]+\\.ya?ml$/"
+      ],
+      "matchStrings": [
+        "# renovate: image\\s+\\w+: (?<depName>[^:\\s]+):(?<currentValue>[^@\\s]+)@(?<currentDigest>sha256:[a-f0-9]{64})"
+      ],
+      "datasourceTemplate": "docker"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "One pull request per app, majors included",
+      "matchFileNames": [
+        "bankmcp/**"
+      ],
+      "groupName": "bankmcp app",
+      "separateMajorMinor": false
+    },
+    {
+      "matchFileNames": [
+        "caddy/**"
+      ],
+      "groupName": "caddy app",
+      "separateMajorMinor": false
+    },
+    {
+      "matchFileNames": [
+        "frps/**"
+      ],
+      "groupName": "frps app",
+      "separateMajorMinor": false
+    },
+    {
+      "matchFileNames": [
+        "intervals-icu-mcp/**"
+      ],
+      "groupName": "intervals-icu-mcp app",
+      "separateMajorMinor": false
+    },
+    {
+      "description": "A new Python version needs the server's wheels checked first; only follow digests of the current tag",
+      "matchPackageNames": [
+        "ghcr.io/home-assistant/base-python"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch"
+      ],
+      "enabled": false
+    },
+    {
+      "matchManagers": [
+        "github-actions"
+      ],
+      "groupName": "GitHub Actions"
+    }
+  ]
+}
