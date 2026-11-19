@@ -1,0 +1,24 @@
+#!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
+# ==============================================================================
+# Restart frps when its certificate is renewed (frps only reads it at start)
+# ==============================================================================
+
+cert="$(cat /tmp/frps-certfile)"
+if [[ -z "${cert}" ]]; then
+    # No certificate configured: nothing to watch.
+    while true; do sleep 86400; done
+fi
+
+interval="${CERTWATCH_INTERVAL:-3600}"
+last="$(stat -c %Y "${cert}" 2>/dev/null)"
+while true; do
+    sleep "${interval}"
+    current="$(stat -c %Y "${cert}" 2>/dev/null)"
+    if [[ -n "${current}" && "${current}" != "${last}" ]]; then
+        last="${current}"
+        bashio::log.info "Certificate ${cert} changed, restarting frps..."
+        # s6 restarts the frps service after it exits.
+        pkill -TERM -x frps
+    fi
+done

@@ -1,0 +1,59 @@
+# https://contributors.home-assistant.io/apps/reference/configuration/
+name: FRP Server
+version: "1.0.0"
+slug: frps
+description: Self-hosted ngrok alternative – the frp tunnel server (frps)
+url: "https://github.com/bjorngadde/home-assistant-apps/tree/main/frps"
+# Prebuilt by GitHub Actions; Home Assistant pulls it instead of building.
+image: "ghcr.io/bjorngadde/{arch}-ha-app-frps"
+arch:
+  - aarch64
+  - amd64
+startup: services
+init: false
+# frps opens ports on demand (TCP/UDP proxies), so it needs the host network
+# rather than a fixed list of mapped ports.
+host_network: true
+# Sidebar panel showing the frps dashboard.
+ingress: true
+ingress_port: 7599
+panel_icon: mdi:tunnel-outline
+panel_title: FRP
+# Read-only access to the certificates (e.g. from the Let's Encrypt app).
+map:
+  - type: ssl
+options:
+  bind_port: 7000
+  force_tls: true
+  certfile: ""
+  keyfile: ""
+  vhost_http_port: 7080
+  internal_only: false
+  subdomain_host: ""
+  allow_ports: ""
+  max_ports_per_client: 0
+  dashboard_port: 7500
+  dashboard_user: admin
+  metrics_port: 0
+  log_level: info
+  users: []
+schema:
+  auth_token: password?
+  bind_port: port
+  force_tls: bool
+  certfile: str?
+  keyfile: str?
+  vhost_http_port: port
+  internal_only: bool
+  subdomain_host: str?
+  allow_ports: "match(^$|^\\d+(-\\d+)?(\\s*,\\s*\\d+(-\\d+)?)*$)?"
+  max_ports_per_client: int(0,)
+  dashboard_port: port
+  dashboard_user: str
+  dashboard_password: password?
+  metrics_port: int(0,65535)
+  log_level: list(trace|debug|info|warn|error)
+  users:
+    - name: "match(^[a-z0-9][a-z0-9_-]{0,31}$)"
+      token: "password(16,)"
+      subdomains: str?

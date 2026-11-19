@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
+# ==============================================================================
+# Start frps (config rendered by /etc/cont-init.d/frps.sh)
+# ==============================================================================
+
+bashio::log.info "Starting frps $(frps --version)..."
+exec frps -c /tmp/frps.toml
