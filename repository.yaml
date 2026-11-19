@@ -1,0 +1,4 @@
+# https://developers.home-assistant.io/docs/apps/repository
+name: Gadde Home Assistant apps
+url: "https://github.com/bjorngadde/home-assistant-apps"
+maintainer: Björn Gadde

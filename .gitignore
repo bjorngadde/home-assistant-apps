@@ -1,0 +1,8 @@
+# Never commit app state, keys or local overrides.
+/**/data/
+*.pem
+*.key
+.env
+.env.*
+!.env.example
+.DS_Store
