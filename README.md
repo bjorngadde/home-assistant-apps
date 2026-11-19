@@ -34,13 +34,16 @@ gives a different hash.
   amd64 image ([`.github/scripts/smoke/`](.github/scripts/smoke/)). On `main` it publishes
   `ghcr.io/bjorngadde/<arch>-ha-app-<slug>:<version>`, the image named in `config.yaml`. A
   published version is never overwritten: changing an app without bumping its version fails the
-  build on `main`.
+  build on `main`. Changes to Markdown files alone don't build anything.
 - **Renovate** ([`renovate.json`](renovate.json)) opens one pull request per app when an upstream
   image, release or commit changes. The [Bump workflow](.github/workflows/bump.yaml) then raises
   that app's version and adds a CHANGELOG line, so merging is all it takes for Home Assistant to
   offer the update.
 - **Secret scan** ([`secrets.yaml`](.github/workflows/secrets.yaml)) runs gitleaks over the whole
   history on every pull request and push.
+- **Tests** ([`test.yaml`](.github/workflows/test.yaml)) run pytest on [`tests/`](tests/): the
+  apps' own code (`tests/<app>/`, such as the Intervals.icu option launcher) and the scripts
+  behind the workflows.
 
 To change an app by hand: edit it, bump `version` in its `config.yaml`, add a CHANGELOG entry and
 open a pull request.
