@@ -1,0 +1,84 @@
+---
+configuration:
+  auth_token:
+    name: Auth token
+    description: >-
+      Shared secret that every frpc client must present. Use a long random
+      string (at least 16 characters). With users configured it's optional:
+      it's then the admin's token, and leaving it empty disables the admin
+      login.
+  bind_port:
+    name: Bind port
+    description: >-
+      Port frpc clients connect to. This is the port to forward in your router.
+  force_tls:
+    name: Require TLS
+    description: >-
+      Only accept TLS-encrypted client connections. frpc uses TLS by default,
+      so leave this on.
+  certfile:
+    name: Certificate file
+    description: >-
+      Certificate in /ssl that frps presents to frpc clients, e.g.
+      fullchain.pem. It must cover the server address clients use (e.g.
+      frp.example.com). Without it, frps uses a self-signed certificate and
+      clients can't verify they're talking to your server.
+  keyfile:
+    name: Private key file
+    description: Private key in /ssl for the certificate, e.g. privkey.pem.
+  vhost_http_port:
+    name: HTTP vhost port
+    description: >-
+      Port where frps serves HTTP tunnels by host name. Point your reverse
+      proxy (e.g. Nginx Proxy Manager) at this port. Do not forward it in the
+      router.
+  internal_only:
+    name: Internal network only
+    description: >-
+      Serve HTTP tunnels (and TCP tunnels) only on Home Assistant's internal
+      network, so devices on your LAN can't reach them over plain HTTP. Point
+      your reverse proxy app at the address shown in the log, e.g.
+      http://172.30.32.1:7080.
+  subdomain_host:
+    name: Subdomain host
+    description: >-
+      Base domain for HTTP tunnels, e.g. "t.example.com". A client asking for
+      subdomain "myapp" is then served at myapp.t.example.com.
+  allow_ports:
+    name: Allowed ports
+    description: >-
+      Ports clients may open for TCP/UDP tunnels, e.g. "6000-6100, 6200".
+      Empty allows any port, which is not recommended.
+  max_ports_per_client:
+    name: Max ports per client
+    description: Maximum number of TCP/UDP ports per client. 0 means no limit.
+  dashboard_port:
+    name: Dashboard port
+    description: >-
+      Port for the frps web dashboard (LAN only, do not forward). 7599 is
+      reserved for the sidebar panel.
+  dashboard_user:
+    name: Dashboard user
+    description: Username for the dashboard.
+  dashboard_password:
+    name: Dashboard password
+    description: >-
+      Set a password to also open the dashboard on the LAN. The sidebar panel
+      works without it.
+  metrics_port:
+    name: Prometheus metrics port
+    description: >-
+      Port for /metrics and /healthz (LAN only, do not forward). 0 disables
+      it.
+  log_level:
+    name: Log level
+    description: How much frps should log.
+  users:
+    name: Users
+    description: >-
+      People who get their own token instead of auth_token. Each entry has a
+      name (a-z, 0-9, - and _), a token (16+ characters) and the subdomains
+      they may use, comma-separated, with * as wildcard (e.g. "brite,
+      anna-*"). Users can only create HTTP tunnels on those subdomains.
+      With users set, every client (you included) signs in with
+      metadatas.token instead of auth.token; see the docs.

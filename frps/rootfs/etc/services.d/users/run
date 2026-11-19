@@ -1,0 +1,13 @@
+#!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
+# ==============================================================================
+# Start frps-users, the plugin behind the users option (only if users are set)
+# ==============================================================================
+
+if [[ "$(jq '.users | length' /tmp/frps-users.json)" -eq 0 ]]; then
+    # No users: frps doesn't call the plugin, so just idle.
+    while true; do sleep 86400; done
+fi
+
+bashio::log.info "Starting users plugin..."
+exec frps-users -config /tmp/frps-users.json

@@ -1,0 +1,48 @@
+name: Bump app versions
+
+# Renovate changes an app's Dockerfile but not its version, and Home Assistant
+# only offers an update when the version changes. On Renovate's pull requests
+# this raises the version of each changed app and adds a CHANGELOG entry.
+# Renovate ignores this bot's commits (gitIgnoredAuthors in renovate.json), so
+# it keeps rebasing the branch, and this runs again after each rebase.
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bump-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  bump:
+    name: Bump
+    if: startsWith(github.head_ref, 'renovate/') && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Check out the pull request branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+
+      - name: Bump versions
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          python3 .github/scripts/bump.py "origin/${BASE_REF}" "${TITLE}"
+          if git diff --quiet; then
+            echo "Nothing to bump."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Bump app versions for: ${TITLE}"
+          git push origin "HEAD:${GITHUB_HEAD_REF}"

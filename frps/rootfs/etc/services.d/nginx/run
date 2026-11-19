@@ -1,0 +1,8 @@
+#!/usr/bin/with-contenv bashio
+# shellcheck shell=bash
+# ==============================================================================
+# Start nginx, the ingress proxy for the sidebar panel
+# ==============================================================================
+
+bashio::log.info "Starting sidebar panel proxy..."
+exec nginx -c /tmp/nginx.conf

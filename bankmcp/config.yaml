@@ -1,0 +1,18 @@
+# https://developers.home-assistant.io/docs/apps/configuration
+name: BankMCP
+version: "1.0.0"
+slug: bankmcp
+description: Read-only MCP server for our own bank accounts via Enable Banking
+url: https://github.com/bjorngadde/home-assistant-apps/tree/main/bankmcp
+# Prebuilt by GitHub Actions; Home Assistant pulls it instead of building.
+image: ghcr.io/bjorngadde/{arch}-ha-app-bankmcp
+arch:
+  - amd64
+init: false
+# No host port mapping: only the reverse proxy app reaches it, over Home
+# Assistant's internal network, at <repo-hash>-bankmcp:8080.
+environment:
+  # Checked against upstream src/config.ts (0.1.15).
+  BASE_URL: https://bank.gadde.nu
+  DATA_DIR: /data   # HA's persistent per-app storage; survives restarts and updates
+  BIND_HOST: 0.0.0.0  # must listen on the internal network so the proxy can reach it
