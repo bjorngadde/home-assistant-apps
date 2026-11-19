@@ -10,8 +10,6 @@ arch:
   - amd64
   - aarch64
 init: false
-startup: application
-boot: auto
 ports:
   443/tcp: 443
 ports_description:
@@ -22,4 +20,3 @@ map:
     read_only: true
   - type: share
     read_only: true
-watchdog: tcp://[HOST]:[PORT:443]

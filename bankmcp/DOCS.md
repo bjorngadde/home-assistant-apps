@@ -88,7 +88,8 @@ publishes a new app version, which shows up as an update in Home Assistant.
    are encrypted, or exclude this app.
 3. **Visible state (optional).** `map: [addon_config:rw]` with `DATA_DIR=/config` would put state
    under `/addon_configs/<slug>/`, where it can be inspected and backed up deliberately.
-4. **Watchdog.** `watchdog` is declared, but must also be turned on in the app's UI.
+4. **Watchdog.** The upstream image has a Docker `HEALTHCHECK` on `/healthz`. Turn the watchdog
+   on in the app's UI so Home Assistant restarts the app when it turns unhealthy.
 
 ## Operational notes
 

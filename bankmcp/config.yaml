@@ -9,9 +9,6 @@ image: ghcr.io/bjorngadde/{arch}-ha-app-bankmcp
 arch:
   - amd64
 init: false
-startup: application
-boot: auto
-watchdog: tcp://[HOST]:8080
 # No host port mapping: only the reverse proxy app reaches it, over Home
 # Assistant's internal network, at <repo-hash>-bankmcp:8080.
 environment:

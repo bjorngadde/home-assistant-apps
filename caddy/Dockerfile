@@ -3,6 +3,10 @@ FROM caddy:2.11.9-alpine@sha256:003a97808e781aa9f7e75cc2f43d34d461099031faf5e20f
 
 COPY run.sh /run.sh
 
+# Caddy's admin API answers on localhost while Caddy is running.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD wget -q -O /dev/null http://127.0.0.1:2019/config/ || exit 1
+
 ARG BUILD_VERSION
 ARG BUILD_ARCH
 LABEL \

@@ -9,17 +9,13 @@ arch:
   - amd64
   - aarch64
 init: false
-startup: application
-boot: auto
-# No ingress: Claude reaches the server through the Caddy app, which talks to
-# it over Home Assistant's internal network. The host port is off by default;
+# Claude reaches the server through the Caddy app, which talks to it over
+# Home Assistant's internal network. The host port is off by default;
 # turn it on only if a proxy outside that network needs it.
-ingress: false
 ports:
   8099/tcp: null
 ports_description:
   8099/tcp: MCP HTTP endpoint (off by default; never forward it on the router)
-watchdog: http://[HOST]:[PORT:8099]/healthz
 options:
   api_key: ""
   athlete_id: ""
