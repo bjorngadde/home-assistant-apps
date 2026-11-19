@@ -1,0 +1,44 @@
+name: Intervals.icu MCP
+version: "1.0.0"
+slug: intervals_icu_mcp
+description: Remote MCP server for Intervals.icu (OAuth or secret URL) for Claude custom connectors
+url: https://github.com/bjorngadde/home-assistant-apps/tree/main/intervals-icu-mcp
+# Prebuilt by GitHub Actions; Home Assistant pulls it instead of building.
+image: ghcr.io/bjorngadde/{arch}-ha-app-intervals-icu-mcp
+arch:
+  - amd64
+  - aarch64
+init: false
+startup: application
+boot: auto
+# No ingress: Claude reaches the server through the Caddy app, which talks to
+# it over Home Assistant's internal network. The host port is off by default;
+# turn it on only if a proxy outside that network needs it.
+ingress: false
+ports:
+  8099/tcp: null
+ports_description:
+  8099/tcp: MCP HTTP endpoint (off by default; never forward it on the router)
+watchdog: http://[HOST]:[PORT:8099]/healthz
+options:
+  api_key: ""
+  athlete_id: ""
+  path_secret: ""
+  oauth_client_id: ""
+  oauth_client_secret: ""
+  public_base_url: ""
+  allowed_athlete_ids: ""
+  scopes: "ACTIVITY:READ,WELLNESS:READ,CALENDAR:WRITE,SETTINGS:READ"
+  delete_mode: safe
+  log_level: info
+schema:
+  api_key: password?
+  athlete_id: str?
+  path_secret: password?
+  oauth_client_id: str?
+  oauth_client_secret: password?
+  public_base_url: str?
+  allowed_athlete_ids: str?
+  scopes: str?
+  delete_mode: list(safe|full|none)
+  log_level: list(debug|info|warning|error)
