@@ -1,0 +1,25 @@
+# https://developers.home-assistant.io/docs/apps/configuration
+name: Caddy
+version: "1.0.0"
+slug: caddy
+description: Caddy reverse proxy with TLS, configured by /share/caddy/Caddyfile
+url: https://github.com/bjorngadde/home-assistant-apps/tree/main/caddy
+# Prebuilt by GitHub Actions; Home Assistant pulls it instead of building.
+image: ghcr.io/bjorngadde/{arch}-ha-app-caddy
+arch:
+  - amd64
+  - aarch64
+init: false
+startup: application
+boot: auto
+ports:
+  443/tcp: 443
+ports_description:
+  443/tcp: HTTPS
+# Certificates (from the Let's Encrypt app) and the Caddyfile, both read-only.
+map:
+  - type: ssl
+    read_only: true
+  - type: share
+    read_only: true
+watchdog: tcp://[HOST]:[PORT:443]

@@ -1,0 +1,79 @@
+# Reference Caddyfile for the Caddy app.
+#
+# The app reads /share/caddy/Caddyfile. This file is the copy kept in git:
+# change it here, then copy it to /share/caddy/Caddyfile. Caddy picks up the
+# change by itself (a broken file is logged and the old config kept).
+#
+# Back-end host names are <repo-hash>-<slug with dashes>. The hash below,
+# 38f2f41e, is what Home Assistant derives when the repository is added as
+# exactly https://github.com/bjorngadde/home-assistant-apps (no trailing
+# slash, no .git). Check each app's info page for its real host name.
+#
+# No secrets belong in this file.
+
+{
+	# Certificates come from /ssl (the Let's Encrypt app, DNS-01). Sites that
+	# load them with `tls` get no automatic certificates, and port 80 is not
+	# published, so there is nothing to redirect.
+	auto_https disable_redirects
+
+	# Only 443/tcp is published, so don't advertise HTTP/3 (UDP).
+	servers {
+		protocols h1 h2
+	}
+
+	# No access log is written (Caddy's default). Error entries include the
+	# request, so drop its URI: the Intervals.icu secret path must never be
+	# logged. Authorization and Cookie headers are redacted by Caddy anyway.
+	log default {
+		format filter {
+			wrap console
+			request>uri delete
+		}
+	}
+}
+
+(gadde_tls) {
+	# Wildcard certificate for *.gadde.nu.
+	tls /ssl/fullchain.pem /ssl/privkey.pem
+	header Strict-Transport-Security "max-age=31536000; includeSubDomains"
+}
+
+# Home Assistant itself (the NGINX app's `domain` option).
+# Home Assistant needs the proxy's network in http.trusted_proxies
+# (172.30.33.0/24, the same as for the NGINX app).
+www.gadde.nu {
+	import gadde_tls
+	reverse_proxy homeassistant.local.hass.io:8123
+}
+
+# BankMCP (bankmcp app). MCP over streamable HTTP: stream responses as they
+# come; Caddy has no response timeout by default.
+bank.gadde.nu {
+	import gadde_tls
+	reverse_proxy 38f2f41e-bankmcp:8080 {
+		flush_interval -1
+	}
+}
+
+# Intervals.icu MCP (intervals-icu-mcp app). MCP messages are small.
+intervals.gadde.nu {
+	import gadde_tls
+	request_body {
+		max_size 2MB
+	}
+	reverse_proxy 38f2f41e-intervals-icu-mcp:8099 {
+		flush_interval -1
+	}
+}
+
+# frps tunnels (frps app): every other subdomain goes to frps, which routes
+# by host name and answers 404 for unknown ones. Caddy prefers the exact
+# names above over this wildcard. frps runs on the host network, which is
+# 172.30.32.1 on Home Assistant's internal network (this works with and
+# without the frps `internal_only` option). Remove this block if frps's
+# `subdomain_host` is not gadde.nu.
+*.gadde.nu {
+	import gadde_tls
+	reverse_proxy 172.30.32.1:7080
+}
