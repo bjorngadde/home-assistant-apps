@@ -8,9 +8,9 @@ ARG BUILD_ARCH
 ARG INTERVALS_MCP_REPO=https://github.com/bjorngadde/intervals-icu-mcp
 # The server's source: a commit on the fork's main branch.
 # renovate: datasource=git-refs depName=intervals-icu-mcp packageName=https://github.com/bjorngadde/intervals-icu-mcp branch=main
-ARG INTERVALS_MCP_REF=1fd031f8bc9f845ba1158f7e8d0342cb5a02c8b2
+ARG INTERVALS_MCP_REF=371b47608c3315c647985f6c5bbf51eb36337779
 # renovate: datasource=pypi depName=uv
-ARG UV_VERSION=0.11.32
+ARG UV_VERSION=0.13.9
 
 # The server is fetched from git at INTERVALS_MCP_REF. Dependencies are
 # installed from the committed uv.lock with hashes (pip hash-checking mode),
