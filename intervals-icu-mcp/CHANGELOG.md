@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+- Update intervals-icu-mcp app
+
 ## 1.0.0
 
 - Moved to the `bjorngadde/home-assistant-apps` repository. Home Assistant now
