@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.1
+
+- Update golang Docker tag to v1.27
+
 ## 1.0.0
 
 - Moved to the `bjorngadde/home-assistant-apps` repository. Home Assistant now
