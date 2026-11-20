@@ -4,7 +4,7 @@
 
 # frps-users: the server plugin behind the users option (see plugin/).
 # Cross-compiled on the build machine, so the arm64 image needs no emulated Go.
-FROM --platform=$BUILDPLATFORM golang:1.24-alpine@sha256:8bee1901f1e530bfb4a7850aa7a479d17ae3a18beb6e09064ed54cfd245b7191 AS users-plugin
+FROM --platform=$BUILDPLATFORM golang:1.27-alpine@sha256:70bd7ddea8b6cbe5d6943cde279d6b67feb10cc924fb9100d1d8757c1575b280 AS users-plugin
 ARG TARGETARCH
 WORKDIR /src
 COPY plugin/ ./
