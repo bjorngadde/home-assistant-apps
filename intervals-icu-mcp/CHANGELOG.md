@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2
+
+- Update intervals-icu-mcp app
+
 ## 1.0.1
 
 - Update intervals-icu-mcp app
