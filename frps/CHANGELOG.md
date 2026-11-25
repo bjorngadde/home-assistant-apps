@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.2
+
+- Update ghcr.io/home-assistant/base:3.24 Docker digest to 5021aac
+
 ## 1.0.1
 
 - Update golang Docker tag to v1.27

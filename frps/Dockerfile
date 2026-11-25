@@ -11,7 +11,7 @@ COPY plugin/ ./
 RUN go test ./... \
     && CGO_ENABLED=0 GOARCH="${TARGETARCH}" go build -trimpath -ldflags="-s -w" -o /frps-users .
 
-FROM ghcr.io/home-assistant/base:3.24@sha256:58422480a299b16b6ea376c2167463206d430619ed02b40cd687c8bd6875519e
+FROM ghcr.io/home-assistant/base:3.24@sha256:5021aac8a4b7f2a1397e23a9749dfe9f736463ffa471df6b200216c68d530fe6
 
 # nginx is the ingress proxy for the sidebar panel.
 RUN apk add --no-cache nginx
