@@ -1,7 +1,7 @@
 # Built by GitHub Actions and pulled by Home Assistant as a prebuilt image.
 # Every upstream input is pinned (images by digest, the server by commit);
 # Renovate keeps them current.
-FROM ghcr.io/home-assistant/base-python:3.13-alpine3.24@sha256:c7d34ae22a87275d46deb65bcb0511b389d7bc6eb8dccb28d44dd7cb8616e603
+FROM ghcr.io/home-assistant/base-python:3.13-alpine3.24@sha256:e14a9fedad75787271e3a782f7f8b041f7f198c3a768102d609163f8ce8018e4
 
 ARG BUILD_VERSION=0.0.0
 ARG BUILD_ARCH
@@ -10,7 +10,7 @@ ARG INTERVALS_MCP_REPO=https://github.com/bjorngadde/intervals-icu-mcp
 # renovate: datasource=git-refs depName=intervals-icu-mcp packageName=https://github.com/bjorngadde/intervals-icu-mcp branch=main
 ARG INTERVALS_MCP_REF=371b47608c3315c647985f6c5bbf51eb36337779
 # renovate: datasource=pypi depName=uv
-ARG UV_VERSION=0.13.9
+ARG UV_VERSION=0.13.10
 
 # The server is fetched from git at INTERVALS_MCP_REF. Dependencies are
 # installed from the committed uv.lock with hashes (pip hash-checking mode),
